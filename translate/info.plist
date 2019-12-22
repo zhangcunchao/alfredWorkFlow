@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>www.521php.com</string>
+	<key>connections</key>
+	<dict>
+		<key>BA1D4E7D-1870-45C6-A91D-0BF5E9C6AE06</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>BE91800C-5B8C-4311-9A3A-9C448CD94F4C</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>F22A0995-D02C-4D99-8FB7-489EA15F350E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>F22A0995-D02C-4D99-8FB7-489EA15F350E</key>
+		<array/>
+	</dict>
+	<key>createdby</key>
+	<string>chao</string>
+	<key>description</key>
+	<string>翻译</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>翻译</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>已经复制</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>BE91800C-5B8C-4311-9A3A-9C448CD94F4C</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>100</integer>
+				<key>keyword</key>
+				<string>fy</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>1</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>wait</string>
+				<key>script</key>
+				<string>//$query = "{query}";
+
+$_app_id = 20191221000368407;
+$_scre   = 'EISndCulRNgL3_1XvA8I';
+
+$q    = "{query}";
+$salt = time();
+$post_data = [
+    'from'  =&gt; 'auto',
+    'to'    =&gt; 'auto',
+    'q'     =&gt; $q,
+    'appid' =&gt; $_app_id,
+    'salt'  =&gt; $salt,
+    'sign'  =&gt; md5($_app_id.$q.$salt.$_scre)
+];
+
+$return = [
+   'items' =&gt; [
+      [
+      	'titile' =&gt; '请检查网络或者百度开发平台',
+      	'网址已复制，请打开浏览器粘贴',
+      	'arg'    =&gt; 'http://fanyi-api.baidu.com/api/trans/product/desktop?req=developer',
+      ],
+   ],
+
+];
+
+
+$curl = curl_init();
+//设置抓取的url
+curl_setopt($curl, CURLOPT_URL, 'http://api.fanyi.baidu.com/api/trans/vip/translate');
+//设置头文件的信息作为数据流输出
+curl_setopt($curl, CURLOPT_HEADER, false);
+curl_setopt($curl, CURLOPT_TIMEOUT, 15); 
+//设置获取的信息以文件流的形式返回，而不是直接输出。
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+//设置post方式提交
+curl_setopt($curl, CURLOPT_POST, 1);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+//执行命令
+$data = curl_exec($curl);
+//关闭URL请求
+curl_close($curl);
+
+if(!empty($data)){
+	$data = json_decode($data,true);
+	$rs   = $data['trans_result'] ?? '';
+    if(!empty($rs)){
+    	$items = [];
+    	foreach ($rs as $key =&gt; $value) {
+    		$items[] = [
+    			'title'  =&gt; ' '.$value['dst'],
+    			'subtitle'  =&gt; '选择自动复制'.$value['dst'],
+    			'arg'  =&gt; $value['dst'],
+    		];
+    	}
+    	$return['items'] = $items;
+    }else{
+    	$return['items'][0]['title'] = json_encode($data,JSON_UNESCAPED_UNICODE);
+    }
+}
+
+echo json_encode($return,JSON_UNESCAPED_UNICODE);
+
+
+</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>翻译</string>
+				<key>title</key>
+				<string>翻译</string>
+				<key>type</key>
+				<integer>1</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>BA1D4E7D-1870-45C6-A91D-0BF5E9C6AE06</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>F22A0995-D02C-4D99-8FB7-489EA15F350E</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>md5</string>
+	<key>uidata</key>
+	<dict>
+		<key>BA1D4E7D-1870-45C6-A91D-0BF5E9C6AE06</key>
+		<dict>
+			<key>xpos</key>
+			<integer>115</integer>
+			<key>ypos</key>
+			<integer>180</integer>
+		</dict>
+		<key>BE91800C-5B8C-4311-9A3A-9C448CD94F4C</key>
+		<dict>
+			<key>xpos</key>
+			<integer>560</integer>
+			<key>ypos</key>
+			<integer>50</integer>
+		</dict>
+		<key>F22A0995-D02C-4D99-8FB7-489EA15F350E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>520</integer>
+			<key>ypos</key>
+			<integer>200</integer>
+		</dict>
+	</dict>
+	<key>version</key>
+	<string>v1</string>
+	<key>webaddress</key>
+	<string>www.521php.com</string>
+</dict>
+</plist>
