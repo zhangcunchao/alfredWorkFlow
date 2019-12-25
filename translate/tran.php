@@ -51,7 +51,7 @@ if(!empty($data)){
     	foreach ($rs as $key => $value) {
     		$items[] = [
     			'title'  => ' '.$value['dst'],
-    			'subtitle'  => '选择自动复制'.$value['dst'],
+    			'subtitle'  => '选择自动复制：'.$value['dst'],
     			'arg'  => $value['dst'],
     		];
     	}
